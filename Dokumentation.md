@@ -73,3 +73,132 @@ Die Normalisierung ist ein Prozess zur Optimierung des Datenmodells, indem Redun
 
 ---
 
+# Tag 2
+
+#### **Generalisierung / Spezialisierung**
+**Theorie:**
+- Redundanzvermeidung durch Zusammenfassung gemeinsamer Attribute in einem generalisierten Entitätstyp.
+- Spezialisierte Entitäten enthalten spezifische Attribute und verweisen per Fremdschlüssel auf die generalisierte Entität.
+- Konzept ist vergleichbar mit Vererbung in der objektorientierten Programmierung.
+
+**Beispiel:**
+```sql
+CREATE TABLE Person (
+    person_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    geburtsdatum DATE
+);
+
+CREATE TABLE Mitarbeiter (
+    mitarbeiter_id INT PRIMARY KEY,
+    person_id INT,
+    abteilung VARCHAR(50),
+    FOREIGN KEY (person_id) REFERENCES Person(person_id)
+);
+
+CREATE TABLE Kunde (
+    kunde_id INT PRIMARY KEY,
+    person_id INT,
+    treuepunkte INT,
+    FOREIGN KEY (person_id) REFERENCES Person(person_id)
+);
+```
+
+**Zusätzliche Beispiele aus anderen Quellen:**
+- Ein Fahrzeug kann als allgemeine Entität erfasst werden, während Autos und Motorräder spezialisierte Entitäten sind.
+- Ein Benutzerkonto kann generalisiert sein, mit Spezialisierungen für Administratoren und Standardnutzer.
+
+#### **Identifying / Non-Identifying Relationship**
+**Theorie:**
+- Identifying Relationship: Fremdschlüssel ist Teil des Primärschlüssels der Child-Tabelle.
+- Non-Identifying Relationship: Fremdschlüssel ist kein Bestandteil des Primärschlüssels.
+
+**Beispiele:**
+```sql
+-- Identifying Relationship
+CREATE TABLE Bestellung (
+    bestellung_id INT,
+    produkt_id INT,
+    PRIMARY KEY (bestellung_id, produkt_id),
+    FOREIGN KEY (produkt_id) REFERENCES Produkt(produkt_id)
+);
+
+-- Non-Identifying Relationship
+CREATE TABLE Mitarbeiter (
+    mitarbeiter_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    abteilung_id INT,
+    FOREIGN KEY (abteilung_id) REFERENCES Abteilung(abteilung_id)
+);
+```
+
+#### **DBMS Analyse**
+**Vergleich mit DB-Engine Ranking:**
+1. Oracle
+2. MySQL
+3. Microsoft SQL Server
+4. PostgreSQL
+5. MongoDB
+6. Redis
+7. Elasticsearch
+8. IBM Db2
+9. SQLite
+10. Cassandra
+
+**Mindmap der 10 wichtigsten DB-Engines:**
+(Erstellt und im Lernportfolio abgelegt.)
+
+#### **SQL-Datenbank-Erstellung**
+```sql
+CREATE SCHEMA SchulDB;
+USE SchulDB;
+
+CREATE TABLE Lehrer (
+    lehrer_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    fach VARCHAR(50)
+);
+
+CREATE TABLE Schueler (
+    schueler_id INT PRIMARY KEY,
+    name VARCHAR(50),
+    klasse VARCHAR(10)
+);
+
+DROP TABLE Schueler;
+ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
+```
+
+#### **Forward Engineering**
+- Modell mit verschiedenen Relationen wurde erstellt und analysiert.
+- SQL-Skript aus Forward Engineering generiert und mit Datenbank synchronisiert.
+
+#### **Fortgeschrittene Themen**
+- **Partitionierung:** Datenaufteilung zur Performance-Optimierung.
+- **Storage Engine:** Steuert, wie Daten gespeichert und abgerufen werden (InnoDB, MyISAM).
+- **Tablespace in InnoDB:** Speichert Tabellen und Indizes, ermöglicht flexible Speicherverwaltung.
+
+#### **Zusätzliche Aufgaben (Lösung)**
+1. Warum Generalisierung/Spezialisierung?
+   - Vermeidung von Redundanz, bessere Datenstruktur.
+2. Warum Identifying Beziehung?
+   - Stärkere Integritätskontrolle, strukturierte Hierarchie.
+3. Wie wird eine Identifying Beziehung implementiert?
+   ```sql
+   CREATE TABLE Projekt (
+       projekt_id INT PRIMARY KEY,
+       name VARCHAR(50)
+   );
+   
+   CREATE TABLE Aufgabe (
+       aufgabe_id INT,
+       projekt_id INT,
+       PRIMARY KEY (aufgabe_id, projekt_id),
+       FOREIGN KEY (projekt_id) REFERENCES Projekt(projekt_id)
+   );
+   ```
+4. DDL-Befehle:
+   - `CREATE`, `ALTER`, `DROP` für Schema- und Tabellenverwaltung.
+
+
+
