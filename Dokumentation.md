@@ -1,3 +1,5 @@
+# Tag 1
+
 ## Grundlagen Datenmodellierung
 
 ### Stichwortartige Zusammenfassung:
@@ -11,7 +13,6 @@
 - **Star Schema** für Reporting-Systeme (Data Mart)
 - **Data Vault Modellierung** für flexible, automatisierte Datenintegration (Core DWH, Integration Layer)
 
----
 
 ## Normalisierungsschritte (M162):
 
@@ -40,3 +41,4 @@
 ### 6. Normalform (6NF, selten verwendet)
 - Umgang mit zeitabhängigen Daten (temporal databases)
 
+---
