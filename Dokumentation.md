@@ -145,8 +145,6 @@ CREATE TABLE Mitarbeiter (
 9. SQLite
 10. Cassandra
 
-**Mindmap der 10 wichtigsten DB-Engines:**
-(Erstellt und im Lernportfolio abgelegt.)
 
 #### **SQL-Datenbank-Erstellung**
 ```sql
@@ -201,7 +199,126 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
    - `CREATE`, `ALTER`, `DROP` für Schema- und Tabellenverwaltung.
 
 ---
+# Tag 3
 
+## Datentypen in MySQL / MariaDB
+
+| Datentyp                    | Beispiel                    | Beschreibung / Hinweis                                          |
+|----------------------------|-----------------------------|------------------------------------------------------------------|
+| `INT`                      | `42`                        | Ganze Zahlen                                                    |
+| `TINYINT`, `SMALLINT`, ... | `255`                       | Natürliche Zahlen (positiv), abhängig vom Bereich               |
+| `DECIMAL(M,D)`             | `DECIMAL(6,2)` → `1234.56`  | Feste Nachkommastellen (z. B. Geldbeträge)                      |
+| `ENUM('A', 'B')`           | `'A'`                        | Aufzählung von Werten                                           |
+| `BOOLEAN` (`TINYINT(1)`)   | `1` oder `0`                | Logische Werte (`TRUE`, `FALSE`)                                |
+| `CHAR(1)`                  | `'A'`                        | Einzelnes Zeichen                                               |
+| `FLOAT`, `DOUBLE`          | `1.23`, `3.1415`            | Gleitkommazahlen                                                |
+| `CHAR(n)`                  | `'Hallo '`                  | Feste Zeichenkette (z. B. `CHAR(10)`)                            |
+| `VARCHAR(n)`               | `'Hallo Welt'`              | Zeichenkette variabler Länge                                    |
+| `DATE`                     | `'2024-03-25'`              | Datum                                                            |
+| `DATETIME`, `TIMESTAMP`   | `'2024-03-25 12:34:56'`     | Datum und Zeit                                                  |
+| `BLOB`, `LONGBLOB`         | Binärdaten                  | z. B. Bilder, Dateien                                            |
+| `JSON`                     | `{"key": "value"}`          | JSON-Dokumente                                                  |
+
+---
+
+## Mehrfachbeziehungen
+
+- Zwei Tabellen können **mehrere unabhängige Beziehungen** zueinander haben.
+- Jede Beziehung repräsentiert einen anderen Sachverhalt.
+- Beispiel: `tbl_Fahrten` → `tbl_Orte` (Startort, Zielort, Via)
+- Falls `mc:mc`, dann ist eine **Transformationstabelle** erforderlich.
+
+---
+
+## Rekursion (strenge Hierarchie)
+
+- Tabelle hat eine Beziehung **zu sich selbst**.
+- Beispiel: Mitarbeiter haben einen Vorgesetzten.
+- Fremdschlüssel zeigt auf Primärschlüssel **der gleichen Tabelle**.
+- Beziehungstyp: `c:mc`
+- Die „oberste Person“ hat `NULL` als Vorgesetzten.
+
+---
+
+## Einfache Hierarchie mit Zwischentabelle
+
+- Wenn mehrere Vorgesetzte möglich sind (Netzwerk), braucht es `mc:mc`.
+- Lösung: **Zwischentabelle** mit 2 FK:
+  - `FK_ist_Vorgesetzter_von`
+  - `FK_ist_Mitarbeiter_von`
+- Dient zur Darstellung komplexer Organisationsstrukturen.
+
+---
+
+## Stücklistenproblem (rekursive Struktur in Produktion)
+
+- Beispiel: Möbelteile → Tisch = Beine + Platte + Schrauben
+- **Tabelle Produkte** + **Tabelle Zusammensetzungen**
+- Jede Komponente verweist auf eine andere (rekursive Beziehung über Zwischentabelle)
+- ➕ [SQL-Beispiel von Sybase](https://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.help.sqlanywhere.12.0.1/dbusage/parts-explosion-cte-sqlug.html)
+
+---
+
+## Auftrag – Tourenplaner erweitern
+
+1. **Generalisierung**: `tbl_Mitarbeiter` mit Vererbung umsetzen
+2. **Mehrfachbeziehungen**: zwischen `tbl_Fahrten` und `tbl_Orte` einbauen
+3. **Rekursion + Hierarchie**: beide Varianten abbilden
+4. Struktur in DB per **Forward Engineering** umsetzen
+5. **Stücklistenproblem** reflektieren
+
+---
+
+## Datenbearbeitung mit SQL (Repetition DML)
+
+- `INSERT INTO`, `UPDATE`, `DELETE`, `ALTER`, `DROP`
+- Siehe Präsentationen:  
+  - [Insert](insert-intro.pdf)  
+  - [Update / Delete / Alter / Drop](update-alter-delete-drop.pdf)
+
+
+---
+
+## Daten auslesen (Repetition SELECT / DQL)
+
+- `SELECT *` → Alle Spalten
+- `SELECT spalten` → Spaltenauswahl
+- `WHERE` → Bedingungen
+- `IF()`, `ROUND()`, `ABS()`, `PI()` → Funktionen
+- `JOIN`, `GROUP BY`, `ORDER BY` → für spätere Aufgaben
+
+
+---
+
+## 👤 Hierarchie & Orgagramm einpflegen
+
+### Tabelle `tbl_Mitarbeiter`
+
+| ID | Vorname | Name       | Telefon             |
+|----|---------|------------|---------------------|
+| 1  | Hans    | Muster     | +41 76 764 23 23    |
+| 2  | Theo    | Dohr       | +41 79 324 55 78    |
+| 3  | Justin  | Biber      | +41 79 872 12 32    |
+| 4  | Johann  | Fluss      | +41 79 298 98 76    |
+| 5  | Diana   | Knecht     | +41 78 323 77 00    |
+| 6  | Anna    | Schöni     | +41 76 569 67 80    |
+| 8  | Lucy    | Schmidt    | +49 420 232 2232    |
+| 9  | Ardit   | Azubi      |                     |
+
+### Organigramm-Beziehungen
+
+- Chef: Justin Biber
+- Unterchefs: Schöni (Dispo), Dohr (Fahrer)
+- Schöni führt: Schmidt, Muster
+- Dohr führt: Fluss, Knecht
+
+
+```sql
+-- Beispiel UPDATE
+UPDATE tbl_Mitarbeiter
+SET FS_Vorgesetzter = 3
+WHERE ID_Mitarbeiter IN (2, 6); -- Dohr, Schöni unter Biber
+```
 ---
 # Tag 4
 
