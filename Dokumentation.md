@@ -200,5 +200,146 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 4. DDL-Befehle:
    - `CREATE`, `ALTER`, `DROP` für Schema- und Tabellenverwaltung.
 
+---
 
+---
+# Tag 4
+
+## Beziehungen mit Einschränkungen (Constraints)
+
+### Beziehungstypen im physischen Modell
+
+| Beziehungstyp       | Umsetzung im DBMS        | Notwendige Constraints       |
+|---------------------|--------------------------|------------------------------|
+| 1:1                 | 1:c oder c:c             | `NN`, `UQ`                   |
+| 1:n                 | 1:mc oder c:mc           | `NN`                         |
+| n:m (viele: viele)  | über Zwischentabelle     | `NN` auf beiden Seiten       |
+
+> **Hinweis:** Einige gewünschte Beziehungstypen lassen sich im RDBMS nicht exakt umsetzen. Einschränkungen müssen ggf. durch Anwendungslogik abgesichert werden.
+
+### Forward Engineering in Workbench
+
+- Beziehungen werden im ER-Diagramm definiert.
+- Constraints wie `NOT NULL`, `UNIQUE`, `FOREIGN KEY` werden automatisch erstellt.
+- Jeder korrekt gesetzte FK erzeugt einen eigenen `CONSTRAINT`, der die referentielle Integrität sicherstellt.
+- Beziehungen können beschriftet werden (`Caption` in der Beziehungseigenschaft).
+
+### Nachträgliche Erstellung von Constraints
+
+#### Fremdschlüssel hinzufügen
+
+```sql
+ALTER TABLE Detailtabelle
+  ADD CONSTRAINT FK_Detail_Master FOREIGN KEY (Fremdschlüssel)
+  REFERENCES Mastertabelle (Primärschlüssel);
+```
+
+---
+# Tag 5
+
+## Löschen in professionellen Datenbanken
+
+### Warum `DELETE`-Befehle problematisch sind
+
+- **Informationsverlust**: Gelöschte Datensätze lassen sich nicht mehr nachvollziehen (z. B. Aktionen eines ausgeschiedenen Mitarbeiters).
+- **Rechtliche Probleme**: In sensiblen Bereichen (z. B. Bankwesen, Protokollierung) müssen Daten historisiert werden.
+- **Manipulationsgefahr**: Bei Kassensystemen könnten Löschungen zu Missbrauch führen.
+- **Lösung**: Keine Löschung → stattdessen:
+  - **Austrittsdatum setzen**
+  - **Status ändern (z. B. aktiv/inaktiv)**
+  - **Stornierungen statt Löschung**
+  - **Historisierung von Änderungen**
+
+> Ziel: Vergangenheitsauswertungen und Revisionssicherheit erhalten!
+
+
+
+## Datenintegrität
+
+### Was bedeutet Datenintegrität?
+
+Datenintegrität sichert:
+- **Richtigkeit**
+- **Konsistenz**
+- **Vollständigkeit**
+der gespeicherten Daten.
+
+### Aspekte der Datenintegrität
+
+1. **Eindeutigkeit & Konsistenz**
+   - Jeder Datensatz eindeutig identifizierbar.
+   - Keine Redundanzen.
+
+2. **Referenzielle Integrität**
+   - Beziehungen zwischen Tabellen müssen konsistent bleiben.
+   - FK darf nur auf existierende PKs verweisen.
+
+3. **Datentypen**
+   - Richtig definierte Typen (z. B. Telefonnummer = `VARCHAR`, nicht `INT`).
+
+4. **Datenbeschränkungen (Constraints)**
+   - Nur gültige Werte erlaubt (z. B. positive Zahlen, gültige Formate).
+
+5. **Validierung**
+   - Daten werden vor dem Einfügen geprüft.
+
+
+
+## Fremdschlüssel-Regeln beim Löschen (`ON DELETE`)
+
+| Regel        | Bedeutung |
+|--------------|-----------|
+| **NO ACTION** / **RESTRICT** | Verhindert Löschung, wenn abhängige Datensätze existieren. (Standardverhalten) |
+| **CASCADE** | Löscht automatisch alle verknüpften Datensätze in der Detailtabelle. **Gefährlich!** |
+| **SET NULL** / **DEFAULT** | Setzt FK auf `NULL` oder den definierten Standardwert. Nur möglich, wenn `NULL` erlaubt ist. |
+
+> `ON UPDATE`-Regeln sind meist irrelevant, da PKs in der Regel nicht geändert werden (Auto-Increment).
+
+
+
+## SELECT ALIAS
+
+- **Aliase für Spaltennamen**
+  - Werden mit `AS` vergeben.
+  - Nur temporär für die Abfrage gültig.
+  
+  SELECT vorname AS "Vorname", nachname AS "Nachname"
+  FROM person;
+
+---
+
+# Tag 6
+
+## Subqueries (Unterabfragen)
+
+### Was ist eine Subquery?
+
+Eine **Subquery** (auch Subselect oder Unterabfrage) ist eine SQL-Abfrage **innerhalb einer anderen**. Sie wird verwendet, um dynamisch Bedingungen zu ermitteln oder Daten zu filtern, basierend auf anderen Tabellen oder Werten.
+
+### Einsatzorte
+
+- In `WHERE`, `FROM`, `HAVING`, `SELECT`
+- In `UPDATE`, `DELETE`, `INSERT`
+
+### **Wichtige Regeln**
+- Immer in **Klammern** setzen.
+- Der **Operator** muss zur Rückgabeart passen:
+  - *Skalar*: `=`, `<`, `>`, ...
+  - *Nicht-skalar*: `IN`, `NOT IN`, `EXISTS`, `ANY`, `ALL`, ...
+
+
+
+## 🔹 Skalare Subquery
+
+- Gibt **eine Zeile, eine Spalte** zurück.
+- Beispiel:
+  ```sql
+  SELECT city_destination, ticket_price
+  FROM one_way_ticket
+  WHERE ticket_price < (
+    SELECT ticket_price
+    FROM one_way_ticket
+    WHERE city_destination = 'Bariloche' AND city_origin = 'Paris'
+  )
+  AND city_origin = 'Paris';
 
