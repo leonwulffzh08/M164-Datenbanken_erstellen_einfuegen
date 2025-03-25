@@ -272,9 +272,6 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 ## Datenbearbeitung mit SQL (Repetition DML)
 
 - `INSERT INTO`, `UPDATE`, `DELETE`, `ALTER`, `DROP`
-- Siehe Präsentationen:  
-  - [Insert](insert-intro.pdf)  
-  - [Update / Delete / Alter / Drop](update-alter-delete-drop.pdf)
 
 
 ---
