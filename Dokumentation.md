@@ -456,4 +456,175 @@ Eine **Subquery** (auch Subselect oder Unterabfrage) ist eine SQL-Abfrage **inne
     WHERE city_destination = 'Bariloche' AND city_origin = 'Paris'
   )
   AND city_origin = 'Paris';
+---
+# Tag 7
+
+## DB Backup & Datensicherung
+
+### Warum sind Backups wichtig?
+
+- Datenverlust führt zu:
+  - Funktionsstörungen von Webseiten & Anwendungen
+  - Verlust sensibler Daten
+  - Vertrauensverlust bei Kunden
+- Ursachen:
+  - Technische Defekte
+  - Benutzerfehler
+  - Selten externe Angriffe
+
+
+
+## Backup-Arten
+
+| Typ              | Beschreibung                                                                 |
+|------------------|-------------------------------------------------------------------------------|
+| **Voll-Backup**     | Sichert gesamte Datenbank (alle Tabellen & Inhalte)                         |
+| **Differentiell**   | Sichert nur Änderungen **seit dem letzten Voll-Backup**                     |
+| **Inkrementell**    | Sichert nur Änderungen **seit dem letzten Backup** (Voll oder Inkrementell) |
+
+> Für Restore bei differenziell: Voll + letztes Differenziell  
+> Für Restore bei inkrementell: Voll + **alle** Inkrementellen bis zum gewünschten Stand
+
+
+
+## Backup-Verfahren
+
+| Verfahren     | Beschreibung |
+|---------------|--------------|
+| **Online-Backup** | Sicherung ohne Stillstand der DB – Änderungen werden nachgetragen |
+| **Offline-Backup** | DB wird gestoppt – einfacher, aber Ausfallzeit!               |
+
+
+
+## Tools zur Datensicherung
+
+| Tool         | Merkmale                                                                 |
+|--------------|--------------------------------------------------------------------------|
+| `mysqldump`  | Standard-Tool für logische Backups (SQL-Script). Schnell & einfach.     |
+| phpMyAdmin   | GUI-Export. Einfach, aber begrenzte Größe (~2MB).                        |
+| BigDump      | Ergänzung zu phpMyAdmin für grosse Backups. Kein eigener Export.         |
+| HeidiSQL     | Windows-Tool. Kann große Backups, aber keine Automatisierung.            |
+| mariabackup  | Physisches Online-Backup-Tool für MariaDB. Unterstützt differenziell.    |
+
+> **Backup-Benutzer anlegen:**
+```sql
+GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'backupuser'@'localhost' IDENTIFIED BY 'backup123';
+```
+---
+# Tag 8
+
+## Weiterarbeit: DB „Freifächer“ (von Tag 7)
+
+> Vorbereitung auf **LB2** – vollständige Bearbeitung empfohlen!
+
+### Aufgabenüberblick
+
+1. **1. Normalform** aus Excel erstellen, Daten als CSV exportieren.
+2. **Logisches ERD** mit mind. 5 Tabellen (mind. 2. NF), Kardinalitäten festlegen.
+3. **Physisches ERD** mit NN-/UQ-Constraints erstellen. Forward Engineering → DDL-Script.
+4. **CSV-Import** mittels `LOAD DATA LOCAL INFILE`.
+5. **Daten bereinigen** (Dubletten, NULL-Werte, Inkonsistenzen).
+6. **Vergleich**: CSV-Daten vs. SELECT-Ergebnisse.
+7. **Testdatengenerator**: 290 zusätzliche Schüler erzeugen und importieren.
+8. **Analyse-Aufgaben**:
+   - Anzahl Teilnehmer bei *Inge Sommer* im Freifach.
+   - Klassenliste mit Schüleranzahl je Klasse in Freifächern.
+   - Alle Schüler, die „Chor“ oder „Elektronik“ besuchen.
+9. Ergebnisse mit `SELECT INTO OUTFILE` exportieren.
+10. **Backup** der Datenbank *Freifaecher* erstellen.
+
+### Tipps & Ressourcen
+
+- [1. NF Beispiel](../7.Tag/media/1NF.png)
+- [Logisches ERD](../7.Tag/media/logERD_2NF.png)
+- [Physisches ERD](../7.Tag/media/physERD_2NF.png)
+- [290 CSV-Datensätze](../7.Tag/media/290_SchuelerInnen.csv)
+
+---
+
+## Opendata-Projekt (Einzelarbeit)
+
+> Angewandte Datenmodellierung & Datenanalyse mit öffentlichen Daten
+
+Wählen Sie **eine** der drei folgenden Quellen und bearbeiten Sie die Aufgaben.
+
+---
+
+### Option 1: Steuerdaten Stadt Zürich
+
+**Datenquelle**:  
+https://data.stadt-zuerich.ch/dataset/fd_median_einkommen_quartier_od1003
+
+#### Aufgaben:
+
+1. CSV-Datei analysieren und **normalisieren**.
+2. **Attribute & Datentypen** bestimmen, Datei bereinigen.
+3. **Physisches ERD + DDL-Script**, Bulkimport vorbereiten.
+4. **Felder analysieren**: Bedeutung von `_p25`, `_p50`, `_p75` (→ Perzentile).
+5. **SQL-Fragen beantworten**:
+   - Quartier mit **max. `_p75`**
+   - Quartier mit **min. `_p50`**
+   - Quartier mit **max. `_p50`**
+6. **Backup** der Datenbank erstellen.
+
+---
+
+### Option 2: Bildungsdaten vom Bundesamt für Statistik (BFS)
+
+**Datenquelle**:  
+https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetail.14879800.html
+
+#### Aufgaben:
+
+1. Excel analysieren, **normalisieren**, export in CSV.
+2. **Attribute & Datentypen** bestimmen, 1. NF sicherstellen.
+3. **Physisches ERD + DDL-Script**, Bulkimport vorbereiten.
+4. Daten analysieren, Bedeutung klären.
+5. **SQL-Fragen beantworten**:
+   - Länder unterhalb OECD-Mittel bei Schulbesuchsquote (15–19)
+   - Land mit **höchstem tertiären Ausbildungsniveau**
+   - Land mit **grösster Zunahme obligatorische Schulabschlüsse** pro Jahr
+6. **Backup** der Datenbank erstellen.
+
+---
+
+### Option 3: Eigene Opendata-Quelle
+
+#### Aufgaben:
+
+1. **Quelle suchen**, CSV oder Excel laden.
+2. **Normalisieren**, **ERD + DDL-Script** erstellen.
+3. **Import** + DML-Script schreiben.
+4. Eigene **Analysen & Abfragen** formulieren.
+5. **Backup** der Datenbank erstellen.
+
+---
+
+## Checkpoint-Fragen
+
+- Wie bringt man Daten aus Excel in eine **normalisierte DB**?
+- Unterschied: **logisches vs. physisches Backup**?
+- Wie funktioniert der **Restore** bei:
+  - Voll-Backup?
+  - Inkrementellem Backup?
+  - Differentiellem Backup?
+- Nenne **drei Backup-Möglichkeiten** + konkrete Tools/Befehle.
+- Was macht `SELECT INTO OUTFILE`?
+
+---
+
+## Nützliche Quellen
+
+- [OpenData Zürich](https://data.stadt-zuerich.ch)
+- [OpenData Swiss](https://opendata.swiss)
+- [BFS Statistikportal](https://www.bfs.admin.ch)
+- [Open Science Swiss](https://www.uzh.ch/de/researchinnovation/ethics/openscience)
+- [Open Access Network](https://open-access.network/startseite)
+
+---
+
+## Referenzen
+
+- [Statistik-Grundlagen zu Perzentilen](https://wissenschafts-thurm.de/grundlagen-der-statistik-lagemasse-median-quartile-perzentile-und-modus/)
+- [SELECT INTO OUTFILE](https://mariadb.com/kb/en/select-into-outfile/)
 
