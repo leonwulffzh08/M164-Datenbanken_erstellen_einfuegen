@@ -630,3 +630,29 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
 # Tag 9
 
 **LB2**
+
+---
+# Tag 10
+
+## Common Table Expressions (CTEs)
+
+### Was ist eine CTE?
+
+Eine **Common Table Expression (CTE)** ist eine temporäre Ergebnismenge (virtuelle Tabelle), die innerhalb einer SQL-Abfrage definiert und verwendet wird.
+
+### Merkmale
+
+- Dient zur besseren **Lesbarkeit**, Strukturierung und **Wiederverwendbarkeit**.
+- Wird mit `WITH` eingeleitet.
+- Funktioniert mit `SELECT`, `INSERT`, `UPDATE`, `DELETE`.
+
+### Beispiel:
+
+```sql
+WITH MitarbeiterAbteilung AS (
+    SELECT Name, Abteilung
+    FROM Mitarbeiter
+    WHERE Abteilung = 'IT'
+)
+SELECT Name
+FROM MitarbeiterAbteilung;
