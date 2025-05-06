@@ -626,3 +626,7 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
 - [Statistik-Grundlagen zu Perzentilen](https://wissenschafts-thurm.de/grundlagen-der-statistik-lagemasse-median-quartile-perzentile-und-modus/)
 - [SELECT INTO OUTFILE](https://mariadb.com/kb/en/select-into-outfile/)
 
+---
+# Tag 9
+
+**LB2**
