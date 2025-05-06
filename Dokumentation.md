@@ -219,7 +219,7 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 | `BLOB`, `LONGBLOB`         | Binärdaten                  | z. B. Bilder, Dateien                                            |
 | `JSON`                     | `{"key": "value"}`          | JSON-Dokumente                                                  |
 
----
+
 
 ## Mehrfachbeziehungen
 
@@ -228,7 +228,6 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 - Beispiel: `tbl_Fahrten` → `tbl_Orte` (Startort, Zielort, Via)
 - Falls `mc:mc`, dann ist eine **Transformationstabelle** erforderlich.
 
----
 
 ## Rekursion (strenge Hierarchie)
 
@@ -238,7 +237,6 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 - Beziehungstyp: `c:mc`
 - Die „oberste Person“ hat `NULL` als Vorgesetzten.
 
----
 
 ## Einfache Hierarchie mit Zwischentabelle
 
@@ -248,7 +246,7 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
   - `FK_ist_Mitarbeiter_von`
 - Dient zur Darstellung komplexer Organisationsstrukturen.
 
----
+
 
 ## Stücklistenproblem (rekursive Struktur in Produktion)
 
@@ -257,7 +255,7 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 - Jede Komponente verweist auf eine andere (rekursive Beziehung über Zwischentabelle)
 - ➕ [SQL-Beispiel von Sybase](https://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.help.sqlanywhere.12.0.1/dbusage/parts-explosion-cte-sqlug.html)
 
----
+
 
 ## Auftrag – Tourenplaner erweitern
 
@@ -267,14 +265,14 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 4. Struktur in DB per **Forward Engineering** umsetzen
 5. **Stücklistenproblem** reflektieren
 
----
+
 
 ## Datenbearbeitung mit SQL (Repetition DML)
 
 - `INSERT INTO`, `UPDATE`, `DELETE`, `ALTER`, `DROP`
 
 
----
+
 
 ## Daten auslesen (Repetition SELECT / DQL)
 
@@ -285,7 +283,7 @@ ALTER TABLE Lehrer ADD COLUMN telefonnummer VARCHAR(20);
 - `JOIN`, `GROUP BY`, `ORDER BY` → für spätere Aufgaben
 
 
----
+
 
 ## 👤 Hierarchie & Orgagramm einpflegen
 
@@ -540,7 +538,7 @@ GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'backupuser'@'l
 - [Physisches ERD](../7.Tag/media/physERD_2NF.png)
 - [290 CSV-Datensätze](../7.Tag/media/290_SchuelerInnen.csv)
 
----
+
 
 ## Opendata-Projekt (Einzelarbeit)
 
@@ -548,7 +546,7 @@ GRANT RELOAD, PROCESS, LOCK TABLES, REPLICATION CLIENT ON *.* TO 'backupuser'@'l
 
 Wählen Sie **eine** der drei folgenden Quellen und bearbeiten Sie die Aufgaben.
 
----
+
 
 ### Option 1: Steuerdaten Stadt Zürich
 
@@ -567,7 +565,7 @@ https://data.stadt-zuerich.ch/dataset/fd_median_einkommen_quartier_od1003
    - Quartier mit **max. `_p50`**
 6. **Backup** der Datenbank erstellen.
 
----
+
 
 ### Option 2: Bildungsdaten vom Bundesamt für Statistik (BFS)
 
@@ -586,7 +584,7 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
    - Land mit **grösster Zunahme obligatorische Schulabschlüsse** pro Jahr
 6. **Backup** der Datenbank erstellen.
 
----
+
 
 ### Option 3: Eigene Opendata-Quelle
 
@@ -598,7 +596,7 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
 4. Eigene **Analysen & Abfragen** formulieren.
 5. **Backup** der Datenbank erstellen.
 
----
+
 
 ## Checkpoint-Fragen
 
@@ -611,7 +609,7 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
 - Nenne **drei Backup-Möglichkeiten** + konkrete Tools/Befehle.
 - Was macht `SELECT INTO OUTFILE`?
 
----
+
 
 ## Nützliche Quellen
 
@@ -621,7 +619,7 @@ https://www.bfs.admin.ch/bfs/de/home/statistiken/bildung-wissenschaft.assetdetai
 - [Open Science Swiss](https://www.uzh.ch/de/researchinnovation/ethics/openscience)
 - [Open Access Network](https://open-access.network/startseite)
 
----
+
 
 ## Referenzen
 
